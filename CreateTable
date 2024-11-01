@@ -4,5 +4,5 @@ CREATE TABLE trading_data (
     sectype VarChar(5),
     date DATE,
     time TIME,
-    last NUMERIC,
+    last NUMERIC
 );
