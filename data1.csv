@@ -1,4 +1,4 @@
-ID,SecType,Date,Time,Ask,Ask volume,Bid,Bid volume,Ask time,Day's high ask,Close,Currency,Day's high ask time,Day's high,ISIN,Auction price,Day's low ask,Day's low,Day's low ask time,Open,Nominal value,Last,Last volume,Trading time,Total volume,Mid price,Trading date,Profit,Current price,Related indices,Day high bid time, Day low bid time,Open Time, Last trade time, Close Time, Day high Time, Day low Time,Bid time,Auction Time
+ID,SecType,Date,Time,Ask,Ask volume,Bid,Bid volume,Ask time,Day's high ask,Close,Currency,Day's high ask time,Day's high,ISIN,Auction price,Day's low ask,Day's low,Day's low ask time,Open,Nominal value,Last,Last volume,Trading time,Total volume,Mid price,Trading date,Profit,Current price,Related indices,Day high bid time, Day low bid time,Open Time, Last trade time, Close Time, Day high Time, Day low Time,Bid time,Auction Time, abc
 A0HN5C.ETR,E,14-11-2021,01:01:11.150,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 A0HN5C.ETR,E,14-11-2021,01:01:11.000,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 SGFI.FR,E,14-11-2021,01:01:50.233,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
