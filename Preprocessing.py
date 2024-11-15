@@ -24,7 +24,7 @@ columns = [
 engine = create_engine(f'postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}')
 
 # Step 2: Define a function to read and process CSV files in chunks
-def load_data_to_db(file_path, chunk_size=10000):
+def load_data_to_db(file_path, chunk_size=100000):
     try:
         # Initialize total row counter
         total_rows = 0
