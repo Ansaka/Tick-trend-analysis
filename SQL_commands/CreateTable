@@ -3,6 +3,6 @@ CREATE TABLE trading_data (
     symbol VARCHAR(20),
     sectype VarChar(5),
     date DATE,
-    time TIME,
+    time TIME(3),
     last NUMERIC
 );
