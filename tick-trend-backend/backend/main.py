@@ -30,13 +30,14 @@ db_name = os.getenv('DB_NAME')
 engine = create_engine(f'postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}')
 
 @app.get("/api/stock-data/{symbol}")
-async def get_stock_data(symbol: str, date: str = None):
-    print(f"Debug: symbol={symbol}, date={date}")  # Add debug logging
+async def get_stock_data(symbol: str, start_date: str = None, end_date: str = None):
+    print(f"Debug: symbol={symbol}, start_date={start_date}, end_date={end_date}")
     
     query = """
     SELECT symbol, date + time as datetime, last 
     FROM trading_data_5min_filled
-    WHERE symbol = :symbol AND date = :date
+    WHERE symbol = :symbol 
+    AND date BETWEEN :start_date AND :end_date
     ORDER BY date + time;
     """
     
@@ -44,7 +45,11 @@ async def get_stock_data(symbol: str, date: str = None):
         with engine.connect() as connection:
             result = connection.execute(
                 text(query), 
-                {"symbol": symbol, "date": date}
+                {
+                    "symbol": symbol,
+                    "start_date": start_date,
+                    "end_date": end_date
+                }
             )
             data = [
                 {
@@ -53,10 +58,33 @@ async def get_stock_data(symbol: str, date: str = None):
                 } 
                 for row in result
             ]
-            print(f"Debug: Found {len(data)} records")  # Add debug logging
+            print(f"Debug: Found {len(data)} records")
             return data
     except Exception as e:
-        print(f"Error: {str(e)}")  # Add error logging
+        print(f"Error: {str(e)}")
+        return {"error": str(e)}
+    
+
+@app.get("/api/symbols")
+async def get_symbols(search: str = ""):
+    query = """
+    SELECT DISTINCT symbol 
+    FROM trading_symbols
+    WHERE symbol ILIKE :search
+    ORDER BY symbol
+    LIMIT 50;
+    """
+    
+    try:
+        with engine.connect() as connection:
+            result = connection.execute(
+                text(query),
+                {"search": f"%{search}%"}
+            )
+            symbols = [row[0] for row in result]
+            return symbols
+    except Exception as e:
+        print(f"Error: {str(e)}")
         return {"error": str(e)}
     
 

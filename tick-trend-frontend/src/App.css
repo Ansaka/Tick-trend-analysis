@@ -2,6 +2,9 @@
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
+  background-color: #1a1a1a;
+  color: #ffffff;
+  min-height: 100vh;
 }
 
 form {
@@ -13,11 +16,15 @@ form {
 input {
   padding: 8px;
   font-size: 16px;
+  background-color: #333;
+  color: #ffffff;
+  border: 1px solid #444;
+  border-radius: 4px;
 }
 
 button {
   padding: 8px 16px;
-  background-color: #007bff;
+  background-color: #0066cc;
   color: white;
   border: none;
   border-radius: 4px;
@@ -25,22 +32,88 @@ button {
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: #0052a3;
 }
 
 .chart-container {
   margin-top: 20px;
   padding: 20px;
-  border: 1px solid #ddd;
+  border: 1px solid #444;
   border-radius: 4px;
-  background: white;
+  background: #2d2d2d;
 }
 
 .error {
-  color: #dc3545;
+  color: #ff6b6b;
   padding: 10px;
-  border: 1px solid #dc3545;
+  border: 1px solid #ff6b6b;
   border-radius: 4px;
   margin: 10px 0;
-  background-color: #f8d7da;
+  background-color: rgba(255, 107, 107, 0.1);
+}
+
+.symbol-search {
+    position: relative;
+    width: 200px;
+}
+
+.suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #2d2d2d;
+    border: 1px solid #444;
+    border-radius: 4px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.suggestions li {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.suggestions li:hover {
+    background-color: #f0f0f0;
+}
+
+.loading {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    padding: 8px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-align: center;
+    z-index: 1000;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.date-inputs {
+    display: flex;
+    gap: 10px;
+}
+
+button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+button:disabled:hover {
+    background-color: #cccccc;
 }
