@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import StockChart from './components/StockChart';
 import './App.css';
 import SymbolSearch from './components/SymbolSearch';
+import Navbar from './components/Navbar';
 
 function App() {
     const [symbol, setSymbol] = useState('');
@@ -24,7 +25,7 @@ function App() {
 
     return (
         <div className="App">
-            <h1>Golden Cross+</h1>
+            <Navbar />
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
                     <SymbolSearch onSymbolSelect={handleSymbolSelect} />

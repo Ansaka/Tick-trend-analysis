@@ -17,7 +17,7 @@ form {
   margin-bottom: 20px;
   display: flex;
   gap: 10px;
-  width: 95%;
+  width: 100%;
   align-self: center;
 }
 
@@ -167,4 +167,22 @@ input[type="date"]:hover {
     width: 100%;
     justify-content: center;
   }
+}
+
+.navbar {
+    width: 100%;
+    padding: 1rem;
+    background-color: #1a1a1a;
+    border-bottom: 1px solid #444;
+    margin-bottom: 20px;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.plus {
+    color: #FFD700;  /* Golden color */
 }
