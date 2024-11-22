@@ -4,13 +4,19 @@ from tqdm import tqdm
 from datetime import datetime
 import glob
 import os
+from urllib.parse import quote_plus
+from dotenv import load_dotenv
+import os
 
-# Step 1: Set up the database connection
-db_user = 'my_user'
-db_password = 'my_password'
-db_host = 'localhost'  # or your database host
-db_port = '5432'       # default PostgreSQL port
-db_name = 'GoldenCross'
+# Load environment variables
+load_dotenv()
+
+# Get database credentials from environment variables
+db_user = os.getenv('DB_USER')
+db_password = quote_plus(os.getenv('DB_PASSWORD'))
+db_host = os.getenv('DB_HOST')
+db_port = os.getenv('DB_PORT')
+db_name = os.getenv('DB_NAME')
 
 columns = [
     "symbol", "sectype", "date", "time", "Ask", "Ask volume", "Bid", "Bid volume", 
@@ -77,22 +83,10 @@ def load_data_to_db(file_path, total_files, current_file, chunk_size=100000):
         return 0
 
 # Step 3: Load all CSV files
-file_pattern = 'raw_data/debs2022-gc-trading-day-*.csv'
-csv_files = sorted(glob.glob(file_pattern))
-total_files = len(csv_files)
-
-if total_files == 0:
-    print("No matching CSV files found!")
-else:
-    print(f"Found {total_files} CSV files to process")
-    total_rows_processed = 0
-    
-    for idx, file_path in enumerate(csv_files, 1):
-        print(f"\nProcessing file {idx}/{total_files}: {file_path}")
-        rows_processed = load_data_to_db(file_path, total_files, idx)
-        total_rows_processed += rows_processed
-    
-    print(f"\nAll files processed. Total rows inserted: {total_rows_processed:,}")
+for i in range(1):  # Adjust range as necessary
+    print(f"Loading data from data{i}.csv...")
+    file_path = f'debs2022-gc-trading-day-12-11-21.csv'
+    load_data_to_db(file_path)
 
 # Step 4: Close the engine
 engine.dispose()
