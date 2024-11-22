@@ -5,8 +5,8 @@ import SymbolSearch from './components/SymbolSearch';
 
 function App() {
     const [symbol, setSymbol] = useState('');
-    const [startDate, setStartDate] = useState('');
-    const [endDate, setEndDate] = useState('');
+    const [startDate, setStartDate] = useState('2021-11-08');
+    const [endDate, setEndDate] = useState('2021-11-14');
     const [showChart, setShowChart] = useState(false);
 
     const handleSubmit = (e) => {
