@@ -45,7 +45,12 @@ const StockChart = ({ symbol, startDate, endDate }) => {
             backgroundColor: '#1a1a1a',
             style: {
                 color: '#ffffff'
-            }
+            },
+            marginLeft: 25,
+            marginRight: 25,
+            spacingLeft: 10,
+            spacingRight: 10
+            
         },
         title: {
             text: `Stock Price: ${symbol}`,

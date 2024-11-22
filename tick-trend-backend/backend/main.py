@@ -26,6 +26,8 @@ db_password = quote_plus(os.getenv('DB_PASSWORD'))
 db_host = os.getenv('DB_HOST')
 db_port = os.getenv('DB_PORT')
 db_name = os.getenv('DB_NAME')
+host = os.getenv('HOST', '127.0.0.1')
+port = int(os.getenv('PORT', 8000))
 
 engine = create_engine(f'postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}')
 
@@ -90,4 +92,4 @@ async def get_symbols(search: str = ""):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    uvicorn.run(app, host=host, port=port)
