@@ -10,7 +10,6 @@ const SymbolSearch = ({ onSymbolSelect }) => {
         const fetchSymbols = async () => {
             if (search.length < 1 || userClick) {
                 setSuggestions([]);
-                setUserClick(false);
                 return;
             }
 
@@ -29,7 +28,7 @@ const SymbolSearch = ({ onSymbolSelect }) => {
 
         const timeoutId = setTimeout(fetchSymbols, 300);
         return () => clearTimeout(timeoutId);
-    }, [search]);
+    }, [search, userClick]);
 
     const handleSuggestionClick = (symbol) => {
         onSymbolSelect(symbol);
@@ -41,6 +40,9 @@ const SymbolSearch = ({ onSymbolSelect }) => {
     const handleInputChange = (e) => {
         const value = e.target.value.toUpperCase();
         setSearch(value);
+        if (userClick) {
+            setUserClick(false)
+        }
     };
 
     return (
