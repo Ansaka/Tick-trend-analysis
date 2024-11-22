@@ -37,7 +37,7 @@ SELECT
      FROM temp_trading_data td 
      WHERE td.symbol = ac.symbol 
        AND td.timestamp <= ac.interval_start
-     ORDER BY td.timestamp DESC
+     ORDER BY td.timestamp DESC, td.last DESC
      LIMIT 1) AS last
 FROM all_combinations ac
 ORDER BY ac.symbol, ac.interval_start;
