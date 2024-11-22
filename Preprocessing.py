@@ -1,6 +1,9 @@
 import pandas as pd
 from sqlalchemy import create_engine
 from tqdm import tqdm
+from datetime import datetime
+import glob
+import os
 from urllib.parse import quote_plus
 from dotenv import load_dotenv
 import os
@@ -30,7 +33,7 @@ columns = [
 engine = create_engine(f'postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}')
 
 # Step 2: Define a function to read and process CSV files in chunks
-def load_data_to_db(file_path, chunk_size=100000):
+def load_data_to_db(file_path, total_files, current_file, chunk_size=100000):
     try:
         # Initialize total row counter
         total_rows = 0
@@ -39,11 +42,18 @@ def load_data_to_db(file_path, chunk_size=100000):
         with open(file_path) as f:
             total_lines = sum(1 for line in f) - 13  # Adjust for skipped rows
         
+        # Extract date from filename for progress reporting
+        date_str = file_path.split('-')[-1].replace('.csv', '')
+        
         # Read CSV in chunks with a progress bar
-        for chunk in tqdm(pd.read_csv(file_path, header=None, skiprows=13, 
-                                      low_memory=False, chunksize=chunk_size), 
-                          total=total_lines // chunk_size + 1, desc="Processing"):
-            
+        chunk_iterator = pd.read_csv(file_path, header=None, skiprows=13, 
+                                   low_memory=False, chunksize=chunk_size)
+        
+        progress_bar = tqdm(chunk_iterator,
+                          total=total_lines // chunk_size + 1,
+                          desc=f"Processing file {current_file}/{total_files} ({date_str})")
+        
+        for chunk in progress_bar:
             # Manually set column names for the current chunk
             chunk.columns = columns
             
@@ -61,17 +71,21 @@ def load_data_to_db(file_path, chunk_size=100000):
 
             # Update total rows processed
             total_rows += len(df_formatted)
-            print(f"Processed {total_rows} rows so far...")
+            
+            # Update progress bar description with detailed information
+            progress_bar.set_postfix({'Rows': total_rows})
 
-        print(f"Data from {file_path} loaded successfully.")
+        print(f"\nCompleted {file_path}: Processed {total_rows:,} rows")
+        return total_rows
 
     except Exception as e:
-        print(f"Error loading data from {file_path}: {e}")
+        print(f"\nError loading data from {file_path}: {e}")
+        return 0
 
 # Step 3: Load all CSV files
 for i in range(1):  # Adjust range as necessary
     print(f"Loading data from data{i}.csv...")
-    file_path = f'debs2022-gc-trading-day-08-11-21.csv'
+    file_path = f'debs2022-gc-trading-day-12-11-21.csv'
     load_data_to_db(file_path)
 
 # Step 4: Close the engine
