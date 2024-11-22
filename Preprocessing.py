@@ -2,13 +2,18 @@ import pandas as pd
 from sqlalchemy import create_engine
 from tqdm import tqdm
 from urllib.parse import quote_plus
+from dotenv import load_dotenv
+import os
 
-# Step 1: Set up the database connection
-db_user = 'postgres'
-db_password = quote_plus('Qlp876@ss()rPD')  # URL encode the password
-db_host = 'localhost'  # or your database host
-db_port = '5432'       # default PostgreSQL port
-db_name = 'GoldenCross'
+# Load environment variables
+load_dotenv()
+
+# Get database credentials from environment variables
+db_user = os.getenv('DB_USER')
+db_password = quote_plus(os.getenv('DB_PASSWORD'))
+db_host = os.getenv('DB_HOST')
+db_port = os.getenv('DB_PORT')
+db_name = os.getenv('DB_NAME')
 
 columns = [
     "symbol", "sectype", "date", "time", "Ask", "Ask volume", "Bid", "Bid volume", 
