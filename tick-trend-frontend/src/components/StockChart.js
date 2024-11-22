@@ -38,14 +38,23 @@ const StockChart = ({ symbol, startDate, endDate }) => {
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div className="error">{error}</div>;
-    if (!chartData.length) return <div>No data available for the selected date.</div>;
+    if (!chartData.length) return <div>No data available for the selected date range.</div>;
 
     const options = {
+        chart: {
+            backgroundColor: '#1a1a1a',
+            style: {
+                color: '#ffffff'
+            }
+        },
         title: {
-            text: `Stock Price: ${symbol}`
+            text: `Stock Price: ${symbol}`,
+            style: {
+                color: '#ffffff'
+            }
         },
         rangeSelector: {
-            selected: 1,
+            selected: 3,  // 'All' option
             buttons: [{
                 type: 'hour',
                 count: 1,
@@ -61,28 +70,77 @@ const StockChart = ({ symbol, startDate, endDate }) => {
             }, {
                 type: 'all',
                 text: 'All'
-            }]
+                }],
+            buttonTheme: {
+                fill: '#2d2d2d',
+                stroke: '#444',
+                style: {
+                        color: '#ffffff'
+                },
+                states: {
+                    hover: {
+                        fill: '#444'
+                    },
+                    select: {
+                        fill: '#00ffff',
+                        style: {
+                            color: '#000000'
+                        }
+                    }
+                }
+            },
+            inputStyle: {
+                color: '#ffffff',
+                backgroundColor: '#2d2d2d'
+            },
+            labelStyle: {
+                color: '#ffffff'
+            }
         },
         series: [{
             name: symbol,
             data: chartData,
             type: 'line',
-            tooltip: {
-                valueDecimals: 2
+            color: '#00ffff', // Neon cyan
+            lineWidth: 2,
+            states: {
+                hover: {
+                    lineWidth: 3
+                }
             }
         }],
         xAxis: {
             type: 'datetime',
             labels: {
+                style: {
+                    color: '#ffffff'
+                },
                 format: '{value:%H:%M}'
-            }
+            },
+            gridLineColor: '#333',
+            lineColor: '#444',
+            tickColor: '#444'
         },
         yAxis: {
             title: {
-                text: 'Price'
-            }
+                text: 'Price',
+                style: {
+                    color: '#ffffff'
+                }
+            },
+            labels: {
+                style: {
+                    color: '#ffffff'
+                }
+            },
+            gridLineColor: '#333'
         },
         tooltip: {
+            backgroundColor: 'rgba(45, 45, 45, 0.9)',
+            borderColor: '#444',
+            style: {
+                color: '#ffffff'
+            },
             split: false,
             shared: true,
             formatter: function() {
@@ -90,6 +148,40 @@ const StockChart = ({ symbol, startDate, endDate }) => {
                         Time: ${Highcharts.dateFormat('%H:%M:%S', this.x)}<br/>
                         Price: ${this.y.toFixed(2)}`;
             }
+        },
+        navigator: {
+            maskFill: 'rgba(0, 255, 255, 0.1)',
+            handles: {
+                backgroundColor: '#00ffff',
+                borderColor: '#00ffff'
+            },
+            series: {
+                color: '#00ffff',
+                lineWidth: 1
+            },
+            xAxis: {
+                gridLineColor: '#333',
+                labels: {
+                    style: {
+                        color: '#ffffff'
+                    }
+                }
+            },
+            outlineColor: '#444',
+            outlineWidth: 1
+        },
+        scrollbar: {
+            barBackgroundColor: '#2d2d2d',
+            barBorderColor: '#00ffff',
+            barBorderWidth: 1,
+            buttonBackgroundColor: '#2d2d2d',
+            buttonBorderColor: '#00ffff',
+            buttonBorderWidth: 1,
+            trackBackgroundColor: '#1a1a1a',
+            trackBorderColor: '#444',
+            trackBorderWidth: 1,
+            rifleColor: '#00ffff',
+            buttonArrowColor: '#00ffff'
         }
     };
 
