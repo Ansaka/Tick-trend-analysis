@@ -33,12 +33,16 @@ function App() {
                             type="date"
                             value={startDate}
                             onChange={(e) => setStartDate(e.target.value)}
+                            min="2021-11-08"
+                            max="2021-11-14"
                             required
                         />
                         <input
                             type="date"
                             value={endDate}
                             onChange={(e) => setEndDate(e.target.value)}
+                            min="2021-11-08"
+                            max="2021-11-14"
                             required
                         />
                     </div>
