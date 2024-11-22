@@ -6,6 +6,10 @@ import json
 from dotenv import load_dotenv
 import os
 from urllib.parse import quote_plus
+from google.cloud.sql.connector import Connector
+from google.oauth2 import service_account
+import pg8000.native
+
 app = FastAPI()
 
 # Load environment variables
@@ -22,16 +26,43 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Get environment variables
+# Get the Google service account key from environment variable
+google_service_account_key = os.getenv("GOOGLE_SERVICE_ACCOUNT_KEY")
+
+# Set up Google Cloud credentials
+if google_service_account_key:
+    service_account_info = json.loads(google_service_account_key)
+    credentials = service_account.Credentials.from_service_account_info(service_account_info)
+else:
+    raise ValueError("GOOGLE_SERVICE_ACCOUNT_KEY environment variable is required")
+
+# Initialize Cloud SQL Connector
+connector = Connector(credentials=credentials)
+
+# Get database connection parameters
+instance_connection_name = os.getenv("INSTANCE")
 db_user = os.getenv('DB_USER')
-db_password = quote_plus(os.getenv('DB_PASSWORD'))
-db_host = os.getenv('DB_HOST')
-db_port = os.getenv('DB_PORT')
+db_password = os.getenv('DB_PASSWORD')
 db_name = os.getenv('DB_NAME')
+
+# Get backend parameters
 host = os.getenv('HOST', '127.0.0.1')
 port = int(os.getenv('PORT', 8000))
 
-engine = create_engine(f'postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}')
+def getconn():
+    return connector.connect(
+        instance_connection_name,
+        "pg8000",
+        user=db_user,
+        password=db_password,
+        db=db_name,
+    )
+
+# Create SQLAlchemy engine using the connection pool
+engine = create_engine(
+    "postgresql+pg8000://",
+    creator=getconn,
+)
 
 @app.get("/api/stock-data/{symbol}")
 async def get_stock_data(symbol: str, start_date: str = None, end_date: str = None):
