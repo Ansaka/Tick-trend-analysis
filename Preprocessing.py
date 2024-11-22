@@ -1,10 +1,11 @@
 import pandas as pd
 from sqlalchemy import create_engine
 from tqdm import tqdm
+from urllib.parse import quote_plus
 
 # Step 1: Set up the database connection
-db_user = 'my_user'
-db_password = 'my_password'
+db_user = 'postgres'
+db_password = quote_plus('Qlp876@ss()rPD')  # URL encode the password
 db_host = 'localhost'  # or your database host
 db_port = '5432'       # default PostgreSQL port
 db_name = 'GoldenCross'
@@ -65,7 +66,7 @@ def load_data_to_db(file_path, chunk_size=100000):
 # Step 3: Load all CSV files
 for i in range(1):  # Adjust range as necessary
     print(f"Loading data from data{i}.csv...")
-    file_path = f'debs2022-gc-trading-day-12-11-21.csv'
+    file_path = f'debs2022-gc-trading-day-08-11-21.csv'
     load_data_to_db(file_path)
 
 # Step 4: Close the engine
