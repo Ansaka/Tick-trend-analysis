@@ -8,17 +8,19 @@ import os
 from urllib.parse import quote_plus
 app = FastAPI()
 
+# Load environment variables
+load_dotenv()
+
+frontend_url = os.getenv('FRONTEND_URL', 'http://localhost:3000')
+
 # Enable CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[frontend_url],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# Load environment variables
-load_dotenv()
 
 # Get environment variables
 db_user = os.getenv('DB_USER')

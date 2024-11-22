@@ -16,7 +16,7 @@ const SymbolSearch = ({ onSymbolSelect }) => {
             setLoading(true);
             try {
                 const response = await axios.get(
-                    `http://localhost:8000/api/symbols?search=${search}`
+                    `${process.env.REACT_APP_BACKEND_URL}/api/symbols?search=${search}`
                 );
                 setSuggestions(response.data);
             } catch (error) {

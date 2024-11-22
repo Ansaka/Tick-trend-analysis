@@ -14,7 +14,7 @@ const StockChart = ({ symbol, startDate, endDate }) => {
                 setLoading(true);
                 setError(null);
                 const response = await axios.get(
-                    `http://localhost:8000/api/stock-data/${symbol}?start_date=${startDate}&end_date=${endDate}`
+                    `${process.env.REACT_APP_BACKEND_URL}/api/stock-data/${symbol}?start_date=${startDate}&end_date=${endDate}`
                 );
                 const data = response.data.map(point => [
                     new Date(point.datetime).getTime(),
