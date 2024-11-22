@@ -3,7 +3,7 @@ import Highcharts from 'highcharts/highstock';
 import HighchartsReact from 'highcharts-react-official';
 import axios from 'axios';
 
-const StockChart = ({ symbol, date }) => {
+const StockChart = ({ symbol, startDate, endDate }) => {
     const [chartData, setChartData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -14,14 +14,14 @@ const StockChart = ({ symbol, date }) => {
                 setLoading(true);
                 setError(null);
                 const response = await axios.get(
-                    `http://localhost:8000/api/stock-data/${symbol}?date=${date}`
+                    `http://localhost:8000/api/stock-data/${symbol}?start_date=${startDate}&end_date=${endDate}`
                 );
                 const data = response.data.map(point => [
                     new Date(point.datetime).getTime(),
                     point.price
                 ]);
-                console.log('Fetched data:', response.data);
-                console.log('Mapped data:', data);
+                //console.log('Fetched data:', response.data);
+                //console.log('Mapped data:', data);
                 setChartData(data);
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -31,10 +31,10 @@ const StockChart = ({ symbol, date }) => {
             }
         };
 
-        if (symbol && date) {
+        if (symbol && startDate && endDate) {
             fetchData();
         }
-    }, [symbol, date]);
+    }, [symbol, startDate, endDate]);
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div className="error">{error}</div>;
