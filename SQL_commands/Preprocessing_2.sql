@@ -1,3 +1,6 @@
+-- Drop the temporary table if it exists
+DROP TABLE IF EXISTS temp_trading_data;
+
 -- Preprocess by creating a temporary table with minimal data
 CREATE TEMP TABLE temp_trading_data AS
 SELECT 
@@ -16,8 +19,8 @@ WITH symbols AS (
 ),
 all_intervals AS (
     SELECT generate_series(
-        (SELECT MIN(date) FROM public.trading_data) + time '00:00',
-        (SELECT MAX(date) FROM public.trading_data) + time '23:55',
+        (SELECT MIN(date) FROM public.trading_data) + time '07:00',
+        (SELECT MAX(date) FROM public.trading_data) + time '22:40',
         interval '5 minutes'
     ) AS interval_start
 ),
