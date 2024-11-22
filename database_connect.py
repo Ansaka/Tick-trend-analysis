@@ -3,7 +3,9 @@ import sys
 import os
 from dotenv import load_dotenv
 from google.cloud.sql.connector import Connector
+from google.oauth2 import service_account
 import pg8000.native as pg8000
+import json
 
 # Set different event loop policy for Windows
 if sys.platform.startswith('win'):
@@ -12,19 +14,17 @@ if sys.platform.startswith('win'):
 # Load environment variables first
 load_dotenv()
 
-# Get the absolute path to the credentials file
-current_dir = os.path.dirname(os.path.abspath(__file__))
-credentials_path = os.path.join(current_dir, os.getenv("AUTH_JSON").lstrip('./'))
+# Get the Google service account key from the environment variable
+google_service_account_key = os.getenv("GOOGLE_SERVICE_ACCOUNT_KEY")
 
-# Verify the file exists
-if not os.path.exists(credentials_path):
-    raise FileNotFoundError(f"Credentials file not found at: {credentials_path}")
-
-# Set the credentials environment variable
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credentials_path
+# Set the credentials environment variable directly
+if google_service_account_key:
+    service_account_info = json.loads(google_service_account_key)
+    credentials = service_account.Credentials.from_service_account_info(service_account_info)
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = google_service_account_key
 
 # Initialize the Cloud SQL Python Connector
-connector = Connector()
+connector = Connector(credentials=credentials)
 
 # Read the environment variables
 instance = os.getenv("INSTANCE")
