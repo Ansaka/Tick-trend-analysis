@@ -17,9 +17,11 @@ const StockChart = ({ symbol, date }) => {
                     `http://localhost:8000/api/stock-data/${symbol}?date=${date}`
                 );
                 const data = response.data.map(point => [
-                    new Date(point.time).getTime(),
+                    new Date(point.datetime).getTime(),
                     point.price
                 ]);
+                console.log('Fetched data:', response.data);
+                console.log('Mapped data:', data);
                 setChartData(data);
             } catch (error) {
                 console.error('Error fetching data:', error);

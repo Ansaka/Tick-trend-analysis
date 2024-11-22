@@ -31,40 +31,33 @@ engine = create_engine(f'postgresql://{db_user}:{db_password}@{db_host}:{db_port
 
 @app.get("/api/stock-data/{symbol}")
 async def get_stock_data(symbol: str, date: str = None):
+    print(f"Debug: symbol={symbol}, date={date}")  # Add debug logging
+    
     query = """
-    WITH time_windows AS (
-        SELECT 
-            symbol,
-            date,
-            date_trunc('hour', time) + 
-                INTERVAL '5 minutes' * FLOOR(EXTRACT(MINUTE FROM time) / 5) as window_start,
-            LAST_VALUE(last) OVER (
-                PARTITION BY 
-                    symbol, 
-                    date, 
-                    date_trunc('hour', time) + INTERVAL '5 minutes' * FLOOR(EXTRACT(MINUTE FROM time) / 5)
-                ORDER BY time
-                RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
-            ) as last_price
-        FROM trading_data
-        WHERE symbol = :symbol
-        AND date = :date
-    )
-    SELECT 
-        window_start as time,
-        last_price as price
-    FROM time_windows
-    GROUP BY window_start, last_price
-    ORDER BY window_start;
+    SELECT symbol, date + time as datetime, last 
+    FROM trading_data_5min_filled
+    WHERE symbol = :symbol AND date = :date
+    ORDER BY date + time;
     """
     
-    with engine.connect() as connection:
-        result = connection.execute(
-            text(query), 
-            {"symbol": symbol, "date": date or datetime.now().strftime('%Y-%m-%d')}
-        )
-        data = [{"time": str(row[0]), "price": float(row[1])} for row in result]
-        return data
+    try:
+        with engine.connect() as connection:
+            result = connection.execute(
+                text(query), 
+                {"symbol": symbol, "date": date}
+            )
+            data = [
+                {
+                    "datetime": row[1].isoformat() if row[1] else None, 
+                    "price": float(row[2]) if row[2] else None
+                } 
+                for row in result
+            ]
+            print(f"Debug: Found {len(data)} records")  # Add debug logging
+            return data
+    except Exception as e:
+        print(f"Error: {str(e)}")  # Add error logging
+        return {"error": str(e)}
     
 
 if __name__ == "__main__":
