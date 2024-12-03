@@ -97,6 +97,11 @@ async def get_stock_data(symbol: str, start_date: str = None, end_date: str = No
                 } 
                 for row in result
             ]
+            
+            # Drop leading None price data points
+            first_valid_index = next((i for i, point in enumerate(data) if point['price'] is not None), len(data))
+            data = data[first_valid_index:] 
+
             print(f"Debug: Found {len(data)} records")
             
             # EMA Calculation Variables
@@ -109,6 +114,8 @@ async def get_stock_data(symbol: str, start_date: str = None, end_date: str = No
             
             # Calculate EMA and detect signals
             signals = []
+            ema_rows = []
+            
             for i, row in enumerate(data):
                 close_price = row["price"]
                 ema_row = {"datetime": row["datetime"], "price": close_price}
@@ -117,15 +124,28 @@ async def get_stock_data(symbol: str, start_date: str = None, end_date: str = No
                 for j in j_values:
                     smoothing_factor = 2 / (1 + j)
                     ema_previous = ema_values[j]  # Get previous EMA
+
+                    # Debugging statements
+                    print(f"Close Price: {close_price}, EMA Previous: {ema_previous}, Smoothing Factor: {smoothing_factor}")
+
+                    # Check for None values
+                    if close_price is None or ema_previous is None:
+                        print("One of the values is None, skipping this iteration.")
+                        print(row)
+                        continue  # Skip this iteration if any value is None
+
                     ema_current = (close_price * smoothing_factor) + (ema_previous * (1 - smoothing_factor))
                     ema_values[j] = ema_current  # Update EMA
                     
                     # Store EMA in the result
                     ema_row[f"ema_{j}"] = ema_current
                 
+                # Append the EMA row to the list
+                ema_rows.append(ema_row)
+
                 # Detect crossovers (buy/sell signals)
-                current_ema_38 = ema_row["ema_38"]
-                current_ema_100 = ema_row["ema_100"]
+                current_ema_38 = ema_row.get("ema_38", 0)
+                current_ema_100 = ema_row.get("ema_100", 0)
                 
                 if i > 0:  # Skip crossover detection for the first row
                     # Bullish breakout (Buy signal)
@@ -150,8 +170,7 @@ async def get_stock_data(symbol: str, start_date: str = None, end_date: str = No
                 
                 print(ema_row)  # Debug EMA calculations
             
-            print(f"Signals: {signals}")  # Debug signals
-            return {"data": data, "signals": signals}
+            return {"data": data, "signals": signals, "ema_rows": ema_rows}
     except Exception as e:
         print(f"Error: {str(e)}")
         return {"error": str(e)}
