@@ -16,13 +16,18 @@ const StockChart = ({ symbol, startDate, endDate }) => {
                 const response = await axios.get(
                     `${process.env.REACT_APP_BACKEND_URL}/api/stock-data/${symbol}?start_date=${startDate}&end_date=${endDate}`
                 );
-                const data = response.data.map(point => [
+
+                // Access the data and signals from the response
+                const { data, signals } = response.data;
+
+                // Map the data to the format required for the chart
+                const chartData = data.map(point => [
                     new Date(point.datetime).getTime(),
                     point.price
                 ]);
-                //console.log('Fetched data:', response.data);
-                //console.log('Mapped data:', data);
-                setChartData(data);
+
+                console.log('Signals:', signals);
+                setChartData(chartData);
             } catch (error) {
                 console.error('Error fetching data:', error);
                 setError('Error loading chart data. Please try again.');
