@@ -25,7 +25,7 @@ const StockChartCard = ({ symbol, startDate, endDate }) => {
                             checked={showEma38}
                             onChange={() => setShowEma38(!showEma38)}
                         />
-                        <span className="color-box" style={{ backgroundColor: 'red' }}></span>
+                        <span className="color-box" style={{ backgroundColor: '#ffd700' }}></span>
                         <label>EMA 38</label>
                     </div>
                     <div className="line-option">
@@ -34,7 +34,7 @@ const StockChartCard = ({ symbol, startDate, endDate }) => {
                             checked={showEma100}
                             onChange={() => setShowEma100(!showEma100)}
                         />
-                        <span className="color-box" style={{ backgroundColor: 'blue' }}></span>
+                        <span className="color-box" style={{ backgroundColor: '#f5f5dc' }}></span>
                         <label>EMA 100</label>
                     </div>
                 </div>

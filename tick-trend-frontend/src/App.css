@@ -154,21 +154,6 @@ input[type="date"]:hover {
   box-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
 }
 
-@media (max-width: 768px) {
-  .App {
-    align-items: center;
-  }
-
-  h1 {
-    align-self: flex-start;
-  }
-
-  .date-inputs {
-    width: 100%;
-    justify-content: center;
-  }
-}
-
 .navbar {
     width: 100%;
     padding: 1rem;
@@ -190,7 +175,7 @@ input[type="date"]:hover {
 .stock-chart-card {
   display: block;
   width: 100%;
-  margin: 20px 0;
+  margin-bottom: 0;
   padding: 10px;
   background-color: #2d2d2d;
   border-radius: 4px;
@@ -199,24 +184,54 @@ input[type="date"]:hover {
 
 .line-selector {
   display: flex;
-  flex-direction: column; /* Change to column layout */
+  flex-direction: row;
   margin-bottom: 10px;
   width: 100%;
+  justify-content: space-between;
 }
 
 .line-option {
   display: flex;
-  align-items: center; /* Align items vertically */
-  margin-bottom: 5px; /* Space between options */
+  align-items: center;
+  margin-bottom: 5px;
+  white-space: nowrap;
 }
 
 .line-option input {
-  margin-right: 10px; /* Space between checkbox and color box */
+  margin-right: 0px;
 }
 
 .color-box {
-  width: 20px; /* Width of the color box */
-  height: 20px; /* Height of the color box */
-  border: 1px solid #444; /* Border for the color box */
-  margin-right: 10px; /* Space between color box and label */
+  width: 20px;
+  height: 20px;
+  border: 1px solid #444;
+  margin-right: 10px;
+}
+
+@media (max-width: 768px) {
+  .App {
+    align-items: center;
+  }
+
+  h1 {
+    align-self: flex-start;
+  }
+
+  .date-inputs {
+    width: 100%;
+    justify-content: center;
+  }
+}
+@media (min-width: 768px) {
+  .stock-chart-card {
+    width: 50%;
+  }
+  .line-selector {
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .line-option {
+    flex: 1;
+  }
 }

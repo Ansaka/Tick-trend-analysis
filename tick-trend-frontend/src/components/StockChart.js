@@ -131,7 +131,7 @@ const StockChart = ({ symbol, startDate, endDate, showPrice, showEma38, showEma1
                 name: 'EMA 38',
                 data: chartData.map(point => [point.datetime, point.ema_38]),
                 type: 'line',
-                color: 'red',
+                color: '#ffd700',
                 lineWidth: 2,
                 states: {
                     hover: {
@@ -143,7 +143,7 @@ const StockChart = ({ symbol, startDate, endDate, showPrice, showEma38, showEma1
                 name: 'EMA 100',
                 data: chartData.map(point => [point.datetime, point.ema_100]),
                 type: 'line',
-                color: 'blue',
+                color: '#f5f5dc',
                 lineWidth: 2,
                 states: {
                     hover: {
