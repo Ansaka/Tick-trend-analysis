@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import StockChart from './components/StockChart';
+import StockChartCard from './components/StockChartCard'
 import './App.css';
 import SymbolSearch from './components/SymbolSearch';
 import Navbar from './components/Navbar';
@@ -52,7 +52,7 @@ function App() {
                     </button>
                 </div>
             </form>
-            {showChart && <StockChart symbol={symbol} startDate={startDate} endDate={endDate} />}
+            {showChart && <StockChartCard symbol={symbol} startDate={startDate} endDate={endDate} />}
         </div>
     );
 }

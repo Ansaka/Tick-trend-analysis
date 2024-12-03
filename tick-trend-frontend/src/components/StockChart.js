@@ -3,7 +3,7 @@ import Highcharts from 'highcharts/highstock';
 import HighchartsReact from 'highcharts-react-official';
 import axios from 'axios';
 
-const StockChart = ({ symbol, startDate, endDate }) => {
+const StockChart = ({ symbol, startDate, endDate, showPrice, showEma38, showEma100 }) => {
     const [chartData, setChartData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -17,19 +17,14 @@ const StockChart = ({ symbol, startDate, endDate }) => {
                 const response = await axios.get(
                     `${process.env.REACT_APP_BACKEND_URL}/api/stock-data/${symbol}?start_date=${startDate}&end_date=${endDate}`
                 );
-                const data = response.data.data.map(point => [
-                    new Date(point.datetime).getTime(),
-                    point.price
-                ]);
-                const signals = response.data.signals.map(point => [
-                    new Date(point.datetime).getTime(),
-                    point.signal,
-                    point.price
-                ])
-                //console.log('Fetched data:', response.data);
-                //console.log('Mapped data:', data);
+                const data = response.data.ema_rows.map(point => ({
+                    datetime: new Date(point.datetime).getTime(),
+                    price: point.price,
+                    ema_38: point.ema_38,
+                    ema_100: point.ema_100
+                }));
+                //console.log(data);
                 setChartData(data);
-                setSignals(signals);
             } catch (error) {
                 console.error('Error fetching data:', error);
                 setError('Error loading chart data. Please try again.');
@@ -109,27 +104,54 @@ const StockChart = ({ symbol, startDate, endDate }) => {
                 color: '#ffffff'
             }
         },
-        series: [{
-            name: symbol,
-            data: chartData,
-            type: 'line',
-            color: '#00ffff', // Neon cyan
-            lineWidth: 2,
-            states: {
-                hover: {
-                    lineWidth: 3
+        series: [
+            showPrice ? {
+                name: symbol,
+                data: chartData.map(point => [point.datetime, point.price]),
+                type: 'line',
+                color: '#00ffff',
+                lineWidth: 2,
+                states: {
+                    hover: {
+                        lineWidth: 3
+                    }
                 }
-            }
-        }, {
-            name: 'Signals',
-            type: 'scatter',
-            data: signals,
-            marker: {
-                enabled: true,
-                radius: 5,
-                fillColor: signal => (signal.signal === 'BUY' ? '#00ff00' : '#ff0000') // Green for buy, red for sell
-            }
-        }],
+            } : null,
+            {
+                name: 'Signals',
+                type: 'scatter',
+                data: signals,
+                marker: {
+                    enabled: true,
+                    radius: 5,
+                    fillColor: signal => (signal.signal === 'BUY' ? '#00ff00' : '#ff0000')
+                }
+            },
+            showEma38 ? {
+                name: 'EMA 38',
+                data: chartData.map(point => [point.datetime, point.ema_38]),
+                type: 'line',
+                color: 'red',
+                lineWidth: 2,
+                states: {
+                    hover: {
+                        lineWidth: 3
+                    }
+                }
+            } : null,
+            showEma100 ? {
+                name: 'EMA 100',
+                data: chartData.map(point => [point.datetime, point.ema_100]),
+                type: 'line',
+                color: 'blue',
+                lineWidth: 2,
+                states: {
+                    hover: {
+                        lineWidth: 3
+                    }
+                }
+            } : null
+        ].filter(Boolean),
         xAxis: {
             type: 'datetime',
             labels: {

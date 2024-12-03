@@ -186,3 +186,37 @@ input[type="date"]:hover {
 .plus {
     color: #FFD700;  /* Golden color */
 }
+
+.stock-chart-card {
+  display: block;
+  width: 100%;
+  margin: 20px 0;
+  padding: 10px;
+  background-color: #2d2d2d;
+  border-radius: 4px;
+  border: 1px solid #444;
+}
+
+.line-selector {
+  display: flex;
+  flex-direction: column; /* Change to column layout */
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.line-option {
+  display: flex;
+  align-items: center; /* Align items vertically */
+  margin-bottom: 5px; /* Space between options */
+}
+
+.line-option input {
+  margin-right: 10px; /* Space between checkbox and color box */
+}
+
+.color-box {
+  width: 20px; /* Width of the color box */
+  height: 20px; /* Height of the color box */
+  border: 1px solid #444; /* Border for the color box */
+  margin-right: 10px; /* Space between color box and label */
+}
