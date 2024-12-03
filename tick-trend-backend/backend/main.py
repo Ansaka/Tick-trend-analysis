@@ -125,13 +125,8 @@ async def get_stock_data(symbol: str, start_date: str = None, end_date: str = No
                     smoothing_factor = 2 / (1 + j)
                     ema_previous = ema_values[j]  # Get previous EMA
 
-                    # Debugging statements
-                    print(f"Close Price: {close_price}, EMA Previous: {ema_previous}, Smoothing Factor: {smoothing_factor}")
-
                     # Check for None values
                     if close_price is None or ema_previous is None:
-                        print("One of the values is None, skipping this iteration.")
-                        print(row)
                         continue  # Skip this iteration if any value is None
 
                     ema_current = (close_price * smoothing_factor) + (ema_previous * (1 - smoothing_factor))
@@ -167,8 +162,6 @@ async def get_stock_data(symbol: str, start_date: str = None, end_date: str = No
                 # Update previous EMA values for next iteration
                 previous_ema_38 = current_ema_38
                 previous_ema_100 = current_ema_100
-                
-                print(ema_row)  # Debug EMA calculations
             
             return {"data": data, "signals": signals, "ema_rows": ema_rows}
     except Exception as e:
