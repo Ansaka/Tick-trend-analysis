@@ -26,17 +26,21 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Get the Google service account key from environment variable
-google_service_account_key = os.getenv("GOOGLE_SERVICE_ACCOUNT_KEY")
+# Get the Google service account key path from the environment variable
+google_service_account_key_path = os.getenv("GOOGLE_SERVICE_ACCOUNT_KEY_PATH")
 
-# Set up Google Cloud credentials
-if google_service_account_key:
-    service_account_info = json.loads(google_service_account_key)
-    credentials = service_account.Credentials.from_service_account_info(service_account_info)
+# Load the JSON data from the file
+if google_service_account_key_path:
+    with open(google_service_account_key_path, 'r') as file:
+        service_account_info = json.load(file)
 else:
-    raise ValueError("GOOGLE_SERVICE_ACCOUNT_KEY environment variable is required")
+    raise ValueError("Variable for credentials is not set")
 
-# Initialize Cloud SQL Connector
+# Set the credentials environment variable directly
+if service_account_info:
+    credentials = service_account.Credentials.from_service_account_info(service_account_info)
+
+# Initialize the Cloud SQL Python Connector
 connector = Connector(credentials=credentials)
 
 # Get database connection parameters
