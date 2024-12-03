@@ -98,7 +98,60 @@ async def get_stock_data(symbol: str, start_date: str = None, end_date: str = No
                 for row in result
             ]
             print(f"Debug: Found {len(data)} records")
-            return data
+            
+            # EMA Calculation Variables
+            j_values = [38, 100]  # Smoothing factors
+            ema_values = {j: 0 for j in j_values}  # Initialize EMA^j_s,w0
+            
+            # To track previous EMAs for crossover detection
+            previous_ema_38 = 0
+            previous_ema_100 = 0
+            
+            # Calculate EMA and detect signals
+            signals = []
+            for i, row in enumerate(data):
+                close_price = row["price"]
+                ema_row = {"datetime": row["datetime"], "price": close_price}
+                
+                # Calculate EMAs
+                for j in j_values:
+                    smoothing_factor = 2 / (1 + j)
+                    ema_previous = ema_values[j]  # Get previous EMA
+                    ema_current = (close_price * smoothing_factor) + (ema_previous * (1 - smoothing_factor))
+                    ema_values[j] = ema_current  # Update EMA
+                    
+                    # Store EMA in the result
+                    ema_row[f"ema_{j}"] = ema_current
+                
+                # Detect crossovers (buy/sell signals)
+                current_ema_38 = ema_row["ema_38"]
+                current_ema_100 = ema_row["ema_100"]
+                
+                if i > 0:  # Skip crossover detection for the first row
+                    # Bullish breakout (Buy signal)
+                    if current_ema_38 > current_ema_100 and previous_ema_38 <= previous_ema_100:
+                        signals.append({
+                            "datetime": ema_row["datetime"],
+                            "signal": "BUY",
+                            "price": close_price
+                        })
+                    
+                    # Bearish breakout (Sell signal)
+                    if current_ema_38 < current_ema_100 and previous_ema_38 >= previous_ema_100:
+                        signals.append({
+                            "datetime": ema_row["datetime"],
+                            "signal": "SELL",
+                            "price": close_price
+                        })
+                
+                # Update previous EMA values for next iteration
+                previous_ema_38 = current_ema_38
+                previous_ema_100 = current_ema_100
+                
+                print(ema_row)  # Debug EMA calculations
+            
+            print(f"Signals: {signals}")  # Debug signals
+            return {"data": data, "signals": signals}
     except Exception as e:
         print(f"Error: {str(e)}")
         return {"error": str(e)}
