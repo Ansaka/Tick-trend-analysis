@@ -40,8 +40,9 @@ const SymbolSearch = ({ onSymbolSelect }) => {
     const handleInputChange = (e) => {
         const value = e.target.value.toUpperCase();
         setSearch(value);
+        onSymbolSelect(value);
         if (userClick) {
-            setUserClick(false)
+            setUserClick(false);
         }
     };
 
