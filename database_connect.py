@@ -14,14 +14,19 @@ if sys.platform.startswith('win'):
 # Load environment variables first
 load_dotenv()
 
-# Get the Google service account key from the environment variable
-google_service_account_key = os.getenv("GOOGLE_SERVICE_ACCOUNT_KEY")
+# Get the Google service account key path from the environment variable
+google_service_account_key_path = os.getenv("GOOGLE_SERVICE_ACCOUNT_KEY_PATH")
+
+# Load the JSON data from the file
+if google_service_account_key_path:
+    with open(google_service_account_key_path, 'r') as file:
+        service_account_info = json.load(file)
+else:
+    raise ValueError("Variable for credentials is not set")
 
 # Set the credentials environment variable directly
-if google_service_account_key:
-    service_account_info = json.loads(google_service_account_key)
+if service_account_info:
     credentials = service_account.Credentials.from_service_account_info(service_account_info)
-    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = google_service_account_key
 
 # Initialize the Cloud SQL Python Connector
 connector = Connector(credentials=credentials)

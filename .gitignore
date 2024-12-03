@@ -1,4 +1,5 @@
 *.csv
 *.env
-css-kaapoisojarvi-2024-4584a1cbfca8.json
+gcp_credentials.json
 db_backup_powershell_command.txt
+*.pyc
