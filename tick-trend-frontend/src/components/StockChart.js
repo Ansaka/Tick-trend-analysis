@@ -7,6 +7,7 @@ const StockChart = ({ symbol, startDate, endDate }) => {
     const [chartData, setChartData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [signals, setSignals] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -16,13 +17,19 @@ const StockChart = ({ symbol, startDate, endDate }) => {
                 const response = await axios.get(
                     `${process.env.REACT_APP_BACKEND_URL}/api/stock-data/${symbol}?start_date=${startDate}&end_date=${endDate}`
                 );
-                const data = response.data.map(point => [
+                const data = response.data.data.map(point => [
                     new Date(point.datetime).getTime(),
                     point.price
                 ]);
+                const signals = response.data.signals.map(point => [
+                    new Date(point.datetime).getTime(),
+                    point.signal,
+                    point.price
+                ])
                 //console.log('Fetched data:', response.data);
                 //console.log('Mapped data:', data);
                 setChartData(data);
+                setSignals(signals);
             } catch (error) {
                 console.error('Error fetching data:', error);
                 setError('Error loading chart data. Please try again.');
@@ -113,6 +120,15 @@ const StockChart = ({ symbol, startDate, endDate }) => {
                     lineWidth: 3
                 }
             }
+        }, {
+            name: 'Signals',
+            type: 'scatter',
+            data: signals,
+            marker: {
+                enabled: true,
+                radius: 5,
+                fillColor: signal => (signal.signal === 'BUY' ? '#00ff00' : '#ff0000') // Green for buy, red for sell
+            }
         }],
         xAxis: {
             type: 'datetime',
@@ -149,9 +165,11 @@ const StockChart = ({ symbol, startDate, endDate }) => {
             split: false,
             shared: true,
             formatter: function() {
-                return `<b>${symbol}</b><br/>
-                        Time: ${Highcharts.dateFormat('%H:%M:%S', this.x)}<br/>
-                        Price: ${this.y.toFixed(2)}`;
+                let tooltip = `<b>${symbol}</b><br/>Time: ${Highcharts.dateFormat('%H:%M:%S', this.x)}<br/>Price: ${this.y.toFixed(2)}`;
+                if (this.point.signal) {
+                    tooltip += `<br/>Signal: ${this.point.signal}`;
+                }
+                return tooltip;
             }
         },
         navigator: {
