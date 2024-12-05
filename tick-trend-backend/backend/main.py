@@ -172,11 +172,10 @@ async def get_stock_data(symbol: str, start_date: str = None, end_date: str = No
 @app.get("/api/symbols")
 async def get_symbols(search: str = ""):
     query = """
-    SELECT DISTINCT symbol 
+    SELECT symbol 
     FROM trading_symbols
     WHERE symbol ILIKE :search
-    ORDER BY symbol
-    LIMIT 50;
+    LIMIT 30;
     """
     
     try:

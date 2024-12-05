@@ -5,6 +5,7 @@ const StockChartCard = ({ symbol, startDate, endDate }) => {
     const [showPrice, setShowPrice] = useState(true); // State for price line visibility
     const [showEma38, setShowEma38] = useState(true); // State for EMA 38 visibility
     const [showEma100, setShowEma100] = useState(true); // State for EMA 100 visibility
+    const [showSignals, setShowSignals] = useState(true); // State for signals visibility
 
     return (
         <>
@@ -37,6 +38,15 @@ const StockChartCard = ({ symbol, startDate, endDate }) => {
                         <span className="color-box" style={{ backgroundColor: '#f5f5dc' }}></span>
                         <label>EMA 100</label>
                     </div>
+                    <div className="line-option">
+                        <input
+                            type="checkbox"
+                            checked={showSignals}
+                            onChange={() => setShowSignals(!showSignals)}
+                        />
+                        <span className="color-box" style={{ backgroundColor: 'grey' }}></span>
+                        <label>Signals</label>
+                    </div>
                 </div>
                 
             </div>
@@ -47,6 +57,7 @@ const StockChartCard = ({ symbol, startDate, endDate }) => {
                 showPrice={showPrice}
                 showEma38={showEma38}
                 showEma100={showEma100}
+                showSignals={showSignals}
             />
         </>
     );
