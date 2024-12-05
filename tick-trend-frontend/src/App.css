@@ -175,6 +175,7 @@ input[type="date"]:hover {
 .stock-chart-card {
   display: block;
   width: 100%;
+  max-width: 578px;
   margin-bottom: 0;
   padding: 10px;
   background-color: #2d2d2d;
@@ -185,7 +186,7 @@ input[type="date"]:hover {
 .line-selector {
   display: flex;
   flex-direction: row;
-  margin-bottom: 10px;
+  margin-bottom: 0px;
   width: 100%;
   justify-content: space-between;
 }
@@ -202,10 +203,11 @@ input[type="date"]:hover {
 }
 
 .color-box {
-  width: 20px;
-  height: 20px;
+  min-width: 10px;
+  min-height: 10px;
   border: 1px solid #444;
   margin-right: 10px;
+  margin-left: 10px;
 }
 
 @media (max-width: 768px) {
