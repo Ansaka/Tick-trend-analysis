@@ -163,7 +163,7 @@ async def get_stock_data(symbol: str, start_date: str = None, end_date: str = No
                 previous_ema_38 = current_ema_38
                 previous_ema_100 = current_ema_100
             
-            return {"data": data, "signals": signals, "ema_rows": ema_rows}
+            return {"signals": signals, "ema_rows": ema_rows}
     except Exception as e:
         print(f"Error: {str(e)}")
         return {"error": str(e)}
