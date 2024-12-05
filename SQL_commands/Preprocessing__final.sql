@@ -7,10 +7,11 @@ SELECT
     symbol,
     date + "time" AS timestamp,
     last
-FROM public.trading_data;
+FROM public.trading_data
+WHERE last != '0.0'; -- Filter out 'last = 0.0' as there should be no transactions with 0.0 as last price
 
 -- Index the temporary table for faster lookups
-CREATE INDEX idx_temp_trading_data ON temp_trading_data (symbol, timestamp);
+CREATE INDEX idx_temp_trading_data ON temp_trading_data (symbol, timestamp DESC);
 
 -- Now generate the 5-minute intervals and join with the temp data
 CREATE TABLE public.trading_data_5min_filled_final AS
@@ -41,7 +42,6 @@ SELECT
         FROM temp_trading_data td 
         WHERE td.symbol = ac.symbol 
           AND td.timestamp <= ac.interval_start
-          AND td.last != '0.0' -- Exclude rows where last is '0.0'
         ORDER BY td.timestamp DESC, td.last DESC
         LIMIT 1
     ) AS last
