@@ -3,7 +3,7 @@ import Highcharts from 'highcharts/highstock';
 import HighchartsReact from 'highcharts-react-official';
 import axios from 'axios';
 
-const StockChart = ({ symbol, startDate, endDate, showPrice, showEma38, showEma100, showSignals }) => {
+const StockChart = ({ symbol, startDate, endDate, showEma38, showEma100 }) => {
     const [chartData, setChartData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -121,37 +121,8 @@ const StockChart = ({ symbol, startDate, endDate, showPrice, showEma38, showEma1
                 color: '#ffffff'
             }
         },
-        tooltip: {
-            backgroundColor: 'rgba(45, 45, 45, 0.9)',
-            borderColor: '#444',
-            style: {
-                color: '#ffffff'
-            },
-            shared: true,
-            formatter: function() {
-                let tooltip = `<b>${symbol}</b><br/>Time: ${Highcharts.dateFormat('%H:%M:%S', this.x)}<br/>`;
-                if (this.points) { // Check if this.points is defined
-                    this.points.forEach(point => {
-                        if (point.series.name === symbol) {
-                            tooltip += `Price: ${point.y.toFixed(2)}<br/>`;
-                        } else if (point.series.name === 'EMA 38') {
-                            tooltip += `EMA 38: ${point.y.toFixed(2)}<br/>`;
-                        } else if (point.series.name === 'EMA 100') {
-                            tooltip += `EMA 100: ${point.y.toFixed(2)}<br/>`;
-                        } else if (point.series.name === 'Sell signals') {
-                            tooltip += `Signal: Sell at ${point.y.toFixed(2)}<br/>`;
-                        } else if (point.series.name === 'Buy signals') {
-                            tooltip += `Signal: Buy at ${point.y.toFixed(2)}<br/>`;
-                        }
-                    });
-                } else {
-                    tooltip += 'No data available for this point.<br/>'; // Fallback message
-                }
-                return tooltip;
-            }
-        },
         series: [
-            showPrice ? {
+            {
                 name: symbol,
                 data: chartData.map(point => [point.datetime, point.price]),
                 type: 'line',
@@ -163,38 +134,56 @@ const StockChart = ({ symbol, startDate, endDate, showPrice, showEma38, showEma1
                         lineWidth: 3
                     }
                 },
-                /*tooltip: {
+                tooltip: {
                     pointFormat: 'Price: <b>{point.y:.2f}</b><br/>'
-                }*/
-            } : null,
-            showSignals ? {
+                }
+            },
+            {
                 name: 'Sell signals',
                 type: 'scatter',
+                color: 'red',
                 data: sellSignals,
                 marker: {
                     enabled: true,
                     color: 'red',
-                    radius: 5,
-                    symbol: 'circle',
+                    radius: 10,
+                    symbol: 'triangle',
+                    states: {
+                        hover: {
+                            enabled: true,
+                            fillColor: 'rgba(255, 0, 0, 0.8)',
+                            radius: 10,
+                            zIndex: 10
+                        }
+                    }
                 },
-                /*tooltip: {
-                    pointFormat: 'Signal: <b>{point.signal}</b> at <b>{point.y:.2f}</b><br/>'
-                },*/
-            } : null,
-            showSignals ? {
+                tooltip: {
+                    pointFormat: 'Signal: <b>Sell</b> at <b>{point.y:.2f}</b><br/>'
+                },
+            },
+            {
                 name: 'Buy signals',
                 type: 'scatter',
+                color: 'green',
                 data: buySignals,
                 marker: {
                     enabled: true,
                     color: 'green',
-                    radius: 5,
+                    radius: 8, // Increase the radius for a larger hitbox
                     symbol: 'circle',
+                    states: {
+                        hover: {
+                            enabled: true,
+                            fillColor: 'rgba(0, 255, 0, 0.8)',
+                            radius: 10,
+                            zIndex: 10
+                        }
+                    }
                 },
-                /*tooltip: {
-                    pointFormat: 'Signal: <b>{point.signal}</b> at <b>{point.y:.2f}</b><br/>'
-                },*/
-            } : null,
+                tooltip: {
+                    pointFormat: 'Signal: <b>Buy</b> at <b>{point.y:.2f}</b><br/>'
+                },
+            },
             showEma38 ? {
                 name: 'EMA 38',
                 data: chartData.map(point => [point.datetime, point.ema_38]),
@@ -207,9 +196,9 @@ const StockChart = ({ symbol, startDate, endDate, showPrice, showEma38, showEma1
                         lineWidth: 3
                     }
                 },
-                /*tooltip: {
+                tooltip: {
                     pointFormat: 'EMA 38: <b>{point.y:.2f}</b><br/>'
-                }*/
+                }
             } : null,
             showEma100 ? {
                 name: 'EMA 100',
@@ -223,9 +212,9 @@ const StockChart = ({ symbol, startDate, endDate, showPrice, showEma38, showEma1
                         lineWidth: 3
                     }
                 },
-                /*tooltip: {
+                tooltip: {
                     pointFormat: 'EMA 100: <b>{point.y:.2f}</b><br/>'
-                }*/
+                }
             } : null
         ].filter(Boolean),
         xAxis: {
@@ -248,17 +237,17 @@ const StockChart = ({ symbol, startDate, endDate, showPrice, showEma38, showEma1
                 },
                 labels: { style: { color: '#ffffff' } },
                 gridLineColor: '#333',
-                opposite: true, // Keep on the left
+                opposite: true,
                 height: '100%', // Full chart height
             },
             {
                 title: {
                     text: null // No title for secondary axis
                 },
-                labels: { style: { color: '#ffffff' }, enabled: !showPrice }, // Hide labels
-                gridLineWidth: '#333', // No grid lines
-                opposite: true, // Keep on the right
-                linkedTo: (showPrice ? 0 : 1),
+                labels: { style: { color: '#ffffff' }, enabled: false },
+                gridLineWidth: '#333',
+                opposite: true,
+                linkedTo: 0,
             }
         ],
         navigator: {

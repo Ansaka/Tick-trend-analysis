@@ -14,15 +14,6 @@ const StockChartCard = ({ symbol, startDate, endDate }) => {
                     <div className="line-option">
                         <input
                             type="checkbox"
-                            checked={showPrice}
-                            onChange={() => setShowPrice(!showPrice)}
-                        />
-                        <span className="color-box" style={{ backgroundColor: '#00ffff' }}></span>
-                        <label>Price</label>
-                    </div>
-                    <div className="line-option">
-                        <input
-                            type="checkbox"
                             checked={showEma38}
                             onChange={() => setShowEma38(!showEma38)}
                         />
@@ -37,15 +28,6 @@ const StockChartCard = ({ symbol, startDate, endDate }) => {
                         />
                         <span className="color-box" style={{ backgroundColor: '#f5f5dc' }}></span>
                         <label>EMA 100</label>
-                    </div>
-                    <div className="line-option">
-                        <input
-                            type="checkbox"
-                            checked={showSignals}
-                            onChange={() => setShowSignals(!showSignals)}
-                        />
-                        <span className="color-box" style={{ backgroundColor: 'grey' }}></span>
-                        <label>Signals</label>
                     </div>
                 </div>
                 
